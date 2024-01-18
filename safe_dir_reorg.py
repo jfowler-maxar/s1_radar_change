@@ -35,8 +35,8 @@ for date in os.listdir(gran_dir):
         for i in os.listdir(date_dir):
             if i.endswith(".SAFE"):
                 #need to create date dir's
-                date = i.split("_")[4][0:8]
-                date_dir = join(date_dir,date)
+                #date = i.split("_")[4][0:8]
+                #date_dir = join(date_dir,date)
                 safe_dir = join(date_dir,i)
                 ann = 'annotation'
                 ann_copy = join(date_dir, ann)
@@ -50,7 +50,8 @@ for date in os.listdir(gran_dir):
                             print(f'looks like {ann_dir} dne')
                     for tiff in os.listdir(measure_dir):
                         if '-vv-' in tiff:
-                            shutil.copy2(tiff,date_dir)
+                            tiff_path = join(measure_dir,tiff)
+                            shutil.copy2(tiff_path,date_dir)
                 print("Done with {}".format(date_dir))
 
 #i could add a part to delete the .zip's, that's easy, but gonna hold on to them for now cause testing
