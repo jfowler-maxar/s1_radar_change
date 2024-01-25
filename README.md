@@ -6,7 +6,7 @@ Requirements:
 ESA's SNAP, Copernicus Browser account
 
 Python modules: 
-pandas, geopandas, osgeo, 
+pandas, geopandas, osgeo, numpy, rasterio  
 
 General information
 Hardcoded paths for creating Dirs, hardcoded Copernicus Browser Credentials
