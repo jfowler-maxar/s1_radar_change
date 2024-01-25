@@ -2,6 +2,7 @@ import os
 from os.path import *
 from osgeo import gdal
 import numpy as np
+import time
 
 work_dir = r"E:\work\s1_change"
 tile = 'n39w077'
@@ -11,6 +12,7 @@ stack_dir = join(tile_dir,'multi_temp_stack')
 temp_slope_dir = join(tile_dir,'temp_slope')
 chang_dir = join(tile_dir, 'change')
 
+start_time = time.time()
 for stack in os.listdir(stack_dir):
     if '_stack.' in stack:
         bxstack = join(stack_dir,stack)
@@ -85,3 +87,5 @@ for stack in os.listdir(stack_dir):
                 max_arg = np.nanargmax(diff_arr, axis=0)+2 #return value is index 0 = b2-b1, 1 = b3-b2, 2 = b4-b3, etc
                 #so +2 should be the band number where change first appears
                 dst_band.WriteArray(max_arg, x, y)
+    print(f'done with {bx_stack}\n{output_path} should be done')
+    print("--- %s seconds ---" % (time.time() - start_time))
