@@ -5,16 +5,17 @@ import os
 from os.path import *
 
 work_dir = r'E:\work\s1_change'
-oneX1 = "n38w078"
-gran_dir = join(work_dir,oneX1)
+tile = "n39w077"
+tile_dir = join(work_dir,tile)
 
 if not exists(work_dir):
     os.mkdir(work_dir)
-if not exists(gran_dir):
-    os.mkdir(gran_dir)
-text_dir = join(gran_dir,'text')
+if not exists(tile_dir):
+    os.mkdir(tile_dir)
+text_dir = join(tile_dir,'text')
 if not exists(text_dir):
     os.mkdir(text_dir)
+
 def get_access_token(username: str, password: str) -> str:
     data = {
         "client_id": "cdse-public",
@@ -42,16 +43,40 @@ productType = "IW_GRDH"
 polarisation = "VV"
 pass_ = "ASCENDING"
 #pass_ = "DESCENDING"
-bbox = f"-77.0001389 39.0001389," \
-       f"-76.0001389 39.0001389," \
-       f"-76.0001389 38.0001389," \
-       f"-77.0001389 38.0001389," \
-       f"-77.0001389 39.0001389"
+lat2 = int(tile[1:3])
+long1 = int(tile[-3:])
+if 'w' in tile:
+    long1 = long1*-1
+    #print(long1)
+if 's' in tile:
+    lat2 = lat2*-1
+#subtract or add to get other coords
+lat1 = lat2 + 1
+long2 = long1 + 1
+
+
+#polygon coords go: long1 lat1, long2 lat1, long2 lat2, long1 lat2, long1 lat1
+bbox = f'{long1} {lat1}, ' \
+       f'{long2} {lat1}, ' \
+       f'{long2} {lat2}, ' \
+       f'{long1} {lat2}, ' \
+       f'{long1} {lat1}'
+
+#S1-A
+#Relative Orbit Number = mod (Absolute Orbit Number orbit - 73, 175) + 1
+def get_relorb(name):
+    abs_orb = name.split('_')[6]
+    abs_orb = int(abs_orb)
+    relorb = ((abs_orb-73) % 175) + 1
+    return relorb
 
 for i in range(1,13):
     if i<9:
         start_date = f"2023-0{i}-01"
         end_date = f"2023-0{i + 1}-01"
+    elif i == 9:
+        start_date = f"2023-0{i}-01"
+        end_date = f"2023-{i + 1}-01"
     elif i>=10 and i <12:
         start_date = f"2023-{i}-01"
         end_date = f"2023-{i+1}-01"
@@ -59,29 +84,22 @@ for i in range(1,13):
         start_date = f"2023-{i}-01"
         end_date = f"2023-{i}-31"
     print(start_date)
-    json = requests.get("https://catalogue.dataspace.copernicus.eu/odata/v1/Products?"
-                        f"$filter=contains(Name, '{productType}') and "
-                        f"contains(Name, 'COG') and "
-                        f"Collection/Name eq '{data_collection}' and "
-                        f"OData.CSC.Intersects(area=geography'SRID=4326;"
-                        f"POLYGON(({bbox}))') and "
-                        f"Attributes/OData.CSC.StringAttribute/any(att:att/Name eq 'orbitDirection' and "
-                        f"att/OData.CSC.StringAttribute/Value eq '{pass_}') and " 
-                        f"ContentDate/Start gt {start_date}T00:00:00.000Z and "
-                        f"ContentDate/Start lt {end_date}T00:11:00.000Z").json()
+    json = requests.get(
+        f"https://catalogue.dataspace.copernicus.eu/odata/v1/Products?"
+        f"$filter=contains(Name, '{productType}') and "
+        f"Collection/Name eq '{data_collection}' and "
+        f"OData.CSC.Intersects(area=geography'SRID=4326;"
+        f"POLYGON(({bbox}))') and "
+        f"ContentDate/Start gt {start_date}T00:00:00.000Z and "
+        f"ContentDate/Start lt {end_date}T00:11:00.000Z").json()
 
     df = pd.DataFrame.from_dict(json['value'])
+    df = df[df['Name'].str.contains('COG.') == False]
 
-    def get_date(name):
-        date = name.split('T')[0][:-2]#just get 1 date per month
-        return date
+    df['relorb'] = df['Name'].apply(get_relorb)
+    csv_out = join(text_dir, f'{tile}_2023_{str(i)}_list.csv')
 
-    df['date'] = df['Name'].apply(get_date)
-    df = df.drop_duplicates(subset=['date'], keep='last')
-
-    csv_out = join(text_dir,f'{oneX1}_2023_{str(i)}_list.csv')
-
-    df.to_csv(csv_out)
+    df.to_csv(csv_out,columns=['Id','Name','relorb'])
 
 csv_lst = []
 for csv in os.listdir(text_dir):
@@ -93,6 +111,5 @@ for csv in os.listdir(text_dir):
 frame = pd.concat(csv_lst,axis=0,ignore_index=True)
 #print(frame[['Id','Name']])
 
-csv_out = join(text_dir, f'{oneX1}_id.csv')
-
-frame.to_csv(csv_out, columns=['Id','Name'])
+csv_out = join(text_dir, f'{tile}_id.csv')
+frame.to_csv(csv_out,columns=['Id','Name','relorb'])#, columns=['Id','Name'])

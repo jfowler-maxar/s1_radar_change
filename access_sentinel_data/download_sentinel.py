@@ -5,14 +5,12 @@ import os
 from os.path import *
 
 work_dir = r'E:\work\s1_change'
-oneX1 = "n38w078"
-gran_dir = join(work_dir,oneX1)
+tile = "n39w077"
+gran_dir = join(work_dir,tile)
 text_dir = join(gran_dir,'text')
 
-
-csv_path = join(text_dir, f'{oneX1}_id.csv')#for now just grabbing one scene per month
+csv_path = join(text_dir, f'{tile}_relorb_4.csv')#for now just grabbing one scene per month
 df = pd.read_csv(csv_path)
-
 
 #i don't have automated way, or a gui select options yet,
 #so just going to manually search for ID's
