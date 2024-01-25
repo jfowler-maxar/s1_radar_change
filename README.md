@@ -61,7 +61,7 @@ input: {tile}_relorb{relorb}_stack.vrt from (6)
 output: {tile}_relorb{relorb}_tempslope.tif 
 
 
-9. radar_std_slope.py
+8. radar_std_slope.py
 takes temporal slope and outputs standard deviation, to be used for thresholding later
 input: {tile}_relorb{relorb}_tempslope.tif (7)
 output: {tile}_relorb{relorb}_tempslope_std.tif
@@ -74,4 +74,18 @@ input: {tile}_relorb{relorb}_stack.vrt from (6)
 output: {tile}_relorb{relorb}_date_num.tif
 
 
-11. 
+10. radar_change_layer.py
+Take tempslope_std > |3| and return date_num 
+input: {tile}_relorb{relorb}_tempslope_std.tif(8) and {tile}_relorb{relorb}_date_num.tif'(9)
+output: {tile}_relorb{relorb}_ch_tmp.tif
+
+11. radar_ch_layer_sieve.py
+gdal_sieve to remove single pixels
+input: {tile}_relorb{relorb}_ch_tmp.tif(10)
+output: {tile}_relorb{relorb}_ch.tif
+
+
+12. radar_vectorize.py
+Take change raster and export to vector
+input: {tile}_relorb{relorb}_ch.tif(11)
+output: {tile}_relorb{relorb}_ch_tmp.shp
