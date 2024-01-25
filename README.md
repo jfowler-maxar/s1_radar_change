@@ -89,3 +89,9 @@ output: {tile}_relorb{relorb}_ch.tif
 Take change raster and export to vector
 input: {tile}_relorb{relorb}_ch.tif(11)
 output: {tile}_relorb{relorb}_ch_tmp.shp
+
+13. radar_vec_attrib.py
+Change date added to vec
+tempslope_std added to attributes
+input: {tile}_relorb{relorb}_ch_tmp.shp (12)
+output: {tile}_relorb{relorb}_ch_final.shp
