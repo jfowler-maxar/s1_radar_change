@@ -87,5 +87,4 @@ for stack in os.listdir(stack_dir):
                 max_arg = np.nanargmax(diff_arr, axis=0)+2 #return value is index 0 = b2-b1, 1 = b3-b2, 2 = b4-b3, etc
                 #so +2 should be the band number where change first appears
                 dst_band.WriteArray(max_arg, x, y)
-    print(f'done with {bx_stack}\n{output_path} should be done')
-    print("--- %s seconds ---" % (time.time() - start_time))
+print("--- %s seconds ---" % (time.time() - start_time))
