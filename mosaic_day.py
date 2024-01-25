@@ -46,7 +46,7 @@ for orb in os.listdir(relorb_dir):
             tmp_graph = join(graphs_dir, "mosaic_02_datatakes_tmp.xml")
             tree.write(tmp_graph)
             procCmd = f'"{gpt_exe}" "{tmp_graph}"'
-            print(procCmd)
+            #print(procCmd)
             subprocess.run(procCmd)
             # os.system(procCmd)
 
