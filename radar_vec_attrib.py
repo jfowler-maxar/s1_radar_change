@@ -7,15 +7,17 @@ import rasterio as rio
 import geopandas as gpd
 import pandas as pd
 import time
+import csv
 
-work_dir = r"E:\work\s1_change"
-tile = 'n39w077'
-relorb = '4'
+work_dir = r'D:\s1_change'
+tile = "n22e114"
+relorb = '113'
 tile_dir = join(work_dir, tile)
 prepro_dir = join(tile_dir,'prepro')
 relorb_dir = join(prepro_dir, f'relorb_{relorb}')
 chang_dir = join(tile_dir, 'change')
 vec_dir = join(tile_dir, 'vec')
+stack_dir = join(tile_dir,'multi_temp_stack')
 
 start_time = time.time()
 
@@ -30,22 +32,21 @@ out_shp = join(vec_dir, out_test)
 ts_std_file = join(chang_dir,f'{tile}_relorb{relorb}_tempslope_std.tif')
 
 #probably be smart to make this a seperate script and save dates as csv or something
-date_lst = []
-for orb in os.listdir(relorb_dir):
-    if len(orb) == 6:
-        abs_orb_dir = join(relorb_dir,orb)
-        for data in os.listdir(abs_orb_dir):
-            if data.startswith('S1A') and data.endswith('.dim'):
-                date_lst.append(data.split('_')[1])
-
-date_lst = list(set(date_lst))
-date_lst.sort()
+csv_file = join(stack_dir,f'date_relorb_{relorb}.csv')
+if not exists(csv_file):
+    print('csv dne')
+    exit(2)
+with open(csv_file, newline='') as f:
+    reader = csv.reader(f)
+    date_lst = list(reader)
 print(date_lst)
+#for i in range(1,len(date_lst)+1):
+#    print(f'{i} and {date_lst[i-1]}')
 
 gdf = gpd.read_file(in_shp)
 gdf['change_d'] = gdf['date']
-for i in range(len(date_lst)):
-    gdf['change_d'] = np.where(gdf['date'] == i, date_lst[i], gdf['change_d'])
+for i in range(1,len(date_lst)+1):
+    gdf['change_d'] = np.where(gdf['date'] == i, date_lst[i-1], gdf['change_d'])
 
 gdf['date'] = gdf['change_d']
 gdf = gpd.GeoDataFrame.drop(gdf,columns=['change_d'])
