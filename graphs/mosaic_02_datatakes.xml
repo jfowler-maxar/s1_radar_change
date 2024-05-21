@@ -1,0 +1,72 @@
+<graph id="Graph">
+  <version>1.0</version>
+  <node id="Read">
+    <operator>Read</operator>
+    <sources/>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <useAdvancedOptions>false</useAdvancedOptions>
+      <file>${read_file1}</file>
+      <copyMetadata>true</copyMetadata>
+      <bandNames/>
+      <pixelRegion>0,0,11133,1389</pixelRegion>
+      <maskNames/>
+    </parameters>
+  </node>
+  <node id="Read(2)">
+    <operator>Read</operator>
+    <sources/>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <useAdvancedOptions>false</useAdvancedOptions>
+      <file>${read_file2}</file>
+      <copyMetadata>true</copyMetadata>
+      <bandNames/>
+      <pixelRegion>0,0,11133,11133</pixelRegion>
+      <maskNames/>
+    </parameters>
+  </node>
+  <node id="SAR-Mosaic">
+    <operator>SAR-Mosaic</operator>
+    <sources>
+      <sourceProduct refid="Read"/>
+      <sourceProduct.1 refid="Read(2)"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <sourceBands/>
+      <resamplingMethod>NEAREST_NEIGHBOUR</resamplingMethod>
+      <average>true</average>
+      <normalizeByMean>true</normalizeByMean>
+      <gradientDomainMosaic>false</gradientDomainMosaic>
+      <pixelSize>10.0</pixelSize>
+      <sceneWidth>11120</sceneWidth>
+      <sceneHeight>11120</sceneHeight>
+      <feather>0</feather>
+      <maxIterations>5000</maxIterations>
+      <convergenceThreshold>1.0E-4</convergenceThreshold>
+    </parameters>
+  </node>
+  <node id="Write">
+    <operator>Write</operator>
+    <sources>
+      <sourceProduct refid="SAR-Mosaic"/>
+    </sources>
+    <parameters class="com.bc.ceres.binding.dom.XppDomElement">
+      <file>${write_file}</file>
+      <formatName>BEAM-DIMAP</formatName>
+    </parameters>
+  </node>
+  <applicationData id="Presentation">
+    <Description/>
+    <node id="Read">
+            <displayPosition x="51.0" y="67.0"/>
+    </node>
+    <node id="Read(2)">
+      <displayPosition x="60.0" y="174.0"/>
+    </node>
+    <node id="SAR-Mosaic">
+      <displayPosition x="220.0" y="123.0"/>
+    </node>
+    <node id="Write">
+            <displayPosition x="455.0" y="135.0"/>
+    </node>
+  </applicationData>
+</graph>
