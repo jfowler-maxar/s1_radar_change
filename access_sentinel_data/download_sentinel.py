@@ -34,7 +34,7 @@ def get_access_token(username: str, password: str) -> str:
         )
     return r.json()["access_token"]
 
-access_token = get_access_token("username", "password")
+access_token = get_access_token("username", "password")#Input username and password here
 
 #can only download 3 at a time... :(
 for i in df.index:
