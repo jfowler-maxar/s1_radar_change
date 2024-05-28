@@ -8,8 +8,9 @@ work_dir = r'E:\work\s1_change'
 tile = "n39w077"
 gran_dir = join(work_dir,tile)
 text_dir = join(gran_dir,'text')
+relorb = '4'
 
-csv_path = join(text_dir, f'{tile}_relorb_4.csv')#for now just grabbing one scene per month
+csv_path = join(text_dir, f'{tile}_relorb_{relorb}.csv')#for now just grabbing one scene per month
 df = pd.read_csv(csv_path)
 
 #i don't have automated way, or a gui select options yet,
@@ -34,7 +35,7 @@ def get_access_token(username: str, password: str) -> str:
         )
     return r.json()["access_token"]
 
-access_token = get_access_token("username", "password")#Input username and password here
+access_token = get_access_token("fowlerjustin29@yahoo.com", "PanCakes2023@)@#")
 
 #can only download 3 at a time... :(
 for i in df.index:
