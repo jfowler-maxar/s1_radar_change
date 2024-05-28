@@ -35,8 +35,7 @@ def get_access_token(username: str, password: str) -> str:
         )
     return r.json()["access_token"]
 
-access_token = get_access_token("username", "password")
-#print(access_token)
+access_token = get_access_token("username", "password") #input username and password here
 
 data_collection = "SENTINEL-1"
 productType = "IW_GRDH"
