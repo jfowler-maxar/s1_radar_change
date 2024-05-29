@@ -1,0 +1,19 @@
+Sentinel 1​
+Read more about Sentinel 1 specifications here:​
+https://sentiwiki.copernicus.eu/web/s1-mission 
+
+search_for_gran.py​
+First script to run, setups work directories ​
+Need Copernicus Data Space Ecosystem account for access​
+Search Parameters:​
+  Tile: for directory organization, I like to break things into 1x1 geocells. Also determines bounding box ​
+  ProductType: IW_GRDH, stands for Interferometric Wide Swatch and Ground Range Detected Resolution. Main mode of acquisition  ​
+  Polarization: VV, Wave mode, vertical transmit – vertical receive ​
+  Pass: either "ASCENDING" or "DESCENDING", this can be removed from search parameters, I like to include it when searching for specific relative orbits​
+  Loops by month and searches for Sentinel 1 scenes that fit parameters. There's probably a smarter way to code this​
+Outputs multiple csv files:​
+One csv for each month, result of monthly search from parameters​
+A csv named "{tile}_id.csv" that contains a list of all S1 scenes that meet parameters ​
+
+Find_rel_orbs.py​
+Pretty simple, takes "{tile}_id.csv" from previous script and creates a separate csv file for each relative orbit  ​
