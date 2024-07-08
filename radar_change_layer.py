@@ -11,8 +11,8 @@ stack_dir = join(tile_dir,'multi_temp_stack')
 temp_slope_dir = join(tile_dir,'temp_slope')
 chang_dir = join(tile_dir, 'change')
 
-ts_std = join(chang_dir,f'{tile}_relorb{relorb}_tempslope_std.tif')
-date_num = join(chang_dir,f'{tile}_relorb{relorb}_date_num.tif')
+ts_std = join(chang_dir,f'{tile}_relorb{relorb}_tempslope_std_focal_filter.tif')
+date_num = join(chang_dir,f'{tile}_relorb{relorb}_date_num_focal_filter.tif')
 
 if not exists(ts_std):
     print(f'{ts_std} DNE')
