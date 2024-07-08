@@ -73,19 +73,23 @@ To be combined with tempslope_std(9) later
 input: {tile}_relorb{relorb}_stack.vrt from (6)
 output: {tile}_relorb{relorb}_date_num.tif
 
+10. mean_filter_3x3.py
+Mean filter to smooth out Step_time and tempslope
+input: {tile}_relorb{relorb}_date_num.tif'(9) and '{tile}_relorb{relorb}_tempslope_std.tif'(8)
+output: {tile}_relorb{relorb}_date_num_focal_filter.tif' and '{tile}_relorb{relorb}_tempslope_std_focal_filter.tif'
 
-10. radar_change_layer.py
+11. radar_change_layer.py
 Take tempslope_std > |3| and return date_num 
-input: {tile}_relorb{relorb}_tempslope_std.tif(8) and {tile}_relorb{relorb}_date_num.tif'(9)
+input: {tile}_relorb{relorb}_date_num_focal_filter.tif' and '{tile}_relorb{relorb}_tempslope_std_focal_filter.tif'
 output: {tile}_relorb{relorb}_ch_tmp.tif
 
-11. radar_ch_layer_sieve.py
+12. radar_ch_layer_sieve.py
 gdal_sieve to remove single pixels
 input: {tile}_relorb{relorb}_ch_tmp.tif(10)
 output: {tile}_relorb{relorb}_ch.tif
 
 
-12. radar_vectorize.py
+13. radar_vectorize.py
 Take change raster and export to vector
 input: {tile}_relorb{relorb}_ch.tif(11)
 output: {tile}_relorb{relorb}_ch_tmp.shp
