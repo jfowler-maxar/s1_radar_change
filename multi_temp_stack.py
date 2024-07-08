@@ -36,10 +36,18 @@ sig_lst = []
 for orb in os.listdir(relorb_dir):
     if len(orb) == 6:
         abs_orb_dir = join(relorb_dir, orb)
-        #mosaic_dir = join(abs_orb_dir,f'mosaic_{orb}.data')
-        sigma0 = join(abs_orb_dir,f'mosaic_{orb}.tif')
-        if exists(sigma0):
-            sig_lst.append(sigma0)
+        mosaic_dir = join(abs_orb_dir,f'mosaic_{orb}.data')
+        if exists(mosaic_dir):
+            sigma0 = join(mosaic_dir,'Sigma0_VH_db.img')
+            if exists(sigma0):
+                sig_lst.append(sigma0)
+        else:
+            for data_take in os.listdir(abs_orb_dir):
+                if data_take.endswith('.data'):
+                    data_take_dir = join(abs_orb_dir,data_take)
+                    sigma0 = join(data_take_dir, 'Sigma0_VH_db.img')
+                    if exists(sigma0):
+                        sig_lst.append(sigma0)
 
 print(sig_lst)
 stack_vrt = f'{tile}_relorb{relorb}_stack.vrt'
